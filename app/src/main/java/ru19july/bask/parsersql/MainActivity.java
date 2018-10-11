@@ -2,6 +2,7 @@ package ru19july.bask.parsersql;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -17,6 +18,8 @@ import ru19july.bask.parsersql.SqlParser.TSqlParserBaseListener;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = MainActivity.class.getSimpleName();
+
     //add
     //idea.max.intellisense.filesize=999999
     //to Help > Edit Custom Properties
@@ -25,7 +28,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        String source = "SELECT * FROM AnyTable";
+        String source = "select vk.Username, vk.City as city\n" +
+                "from VK_USERS vk, t2\n" +
+                "where vk.id = t2.id;\n";
 
         try {
             ParseTreeListener listener = new Printer();
@@ -49,6 +54,14 @@ public class MainActivity extends AppCompatActivity {
         public boolean StatementFound;
 
         private String alias = "";
+
+        @Override
+        public  void enterTable_name(ru19july.bask.parsersql.TSqlParser.Table_nameContext ctx)
+    {
+        //if (branch == BranchType.Search_condition || branch == BranchType.Select || mode == JoinMode.Undefined)
+        //    return;
+        Log.d(TAG, "\t\tTABLE_NAME: " + ctx.getText());
+    }
 /*
         @Override
         public void EnterQuery_specification(ru19july.bask.parsersql.TSqlParser.Query_specificationContext ctx)
